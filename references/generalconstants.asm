@@ -1,0 +1,11 @@
+.var CLEAR_SCREEN = $e544
+.var PORT_REG_A = $dc00
+.var PORT_REG_B = $dc01
+.var DD_REG_A = $dc02
+.var DD_REG_B = $dc03
+
+.var INTERRUPT_EXECUTION_LOW = $0314
+.var INTERRUPT_EXECUTION_HIGH = $0315
+.var INTERRUPT_STATUS = $D019
+.var SYS_IRQ_HANDLER = $ea31
+.var INTERRUPT_REG = $dc0d

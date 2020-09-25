@@ -1,0 +1,45 @@
+.label screen=$10df {
+  .label clear=$10df {
+  }
+}
+.label main=$1000 {
+  .label game=$100a {
+  }
+  .label title=$1000 {
+  }
+}
+.label interrupts=$10ed {
+  .label init=$10ed
+  .label acknowledge=$11d6
+  .label animations=$1114
+  .label lane4=$11ac
+  .label lane3=$1182
+  .label lane2=$1158
+  .label lane1=$112e
+}
+.label spikes=$1086 {
+  .label move=$10dc {
+  }
+  .label setup=$1086 {
+  }
+  .label animation=$10ad {
+    .label delay_counter=$10d3
+    .label continue=$10d1
+    .label animation_draw=$10c8
+    .label frame_counter=$10d2
+    .label animation_frames=$10d4
+  }
+}
+.label player=$1026 {
+  .label setup=$1027 {
+  }
+  .label key_check=$1037 {
+    .label f7=$1073
+    .label end_nopress=$1080
+    .label f1=$1046
+    .label end_withpress=$107f
+    .label f3=$1055
+    .label f5=$1064
+  }
+  .label selected_lane=$1026
+}
