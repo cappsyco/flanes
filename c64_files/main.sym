@@ -1,45 +1,98 @@
-.label screen=$10df {
-  .label clear=$10df {
+.label screen=$1383 {
+  .label clear=$1383 {
+  }
+  .label text_color=$1391 {
   }
 }
-.label main=$1000 {
-  .label game=$100a {
+.label active_lane_movement=$107c
+.label main=$1085 {
+  .label game=$1095 {
+    .label br=$10b0
+    .label lr=$10a1
+    .label main=$10bf
   }
-  .label title=$1000 {
-  }
-}
-.label interrupts=$10ed {
-  .label init=$10ed
-  .label acknowledge=$11d6
-  .label animations=$1114
-  .label lane4=$11ac
-  .label lane3=$1182
-  .label lane2=$1158
-  .label lane1=$112e
-}
-.label spikes=$1086 {
-  .label move=$10dc {
-  }
-  .label setup=$1086 {
-  }
-  .label animation=$10ad {
-    .label delay_counter=$10d3
-    .label continue=$10d1
-    .label animation_draw=$10c8
-    .label frame_counter=$10d2
-    .label animation_frames=$10d4
+  .label title=$1085 {
   }
 }
-.label player=$1026 {
-  .label setup=$1027 {
-  }
-  .label key_check=$1037 {
-    .label f7=$1073
-    .label end_nopress=$1080
-    .label f1=$1046
-    .label end_withpress=$107f
-    .label f3=$1055
-    .label f5=$1064
-  }
-  .label selected_lane=$1026
+.label lane1_shape_x=$107d
+.label lane3_shape_x=$1081
+.label interrupts=$13de {
+  .label init=$13de
+  .label acknowledge=$14bd
+  .label lane4=$148f
+  .label lane3=$1461
+  .label lane2=$1433
+  .label lane1=$1405
 }
+.label title1=$1002
+.label title2=$102a
+.label title3=$1052
+.label lane2_shape_x=$107f
+.label shapes=$113b {
+  .label move=$11cb {
+    .label set_lane=$11d2
+    .label move_3_x=$1216
+    .label move_4_x=$1229
+    .label move_1_x=$11f0
+    .label move_end=$1239
+    .label move_2_x=$1203
+    .label move_active=$11dd
+  }
+  .label randomise=$1317 {
+    .label set_shape_2=$132f
+    .label set_shape_1=$132a
+    .label randomise_end=$1382
+    .label randomise_shape_3=$1360
+    .label randomise_shape_4=$1371
+    .label set_shape_4=$1339
+    .label randomise_shape_1=$133e
+    .label set_shape_3=$1334
+    .label randomise_shape_2=$134f
+  }
+  .label setup=$113b {
+  }
+  .label draw=$123a {
+    .label set_2_low_x=$1287
+    .label store_1_msb_x=$1268
+    .label set_4_x=$12cd
+    .label set_2_high_x=$1278
+    .label set_1_high_x=$1247
+    .label set_4_low_x=$12e9
+    .label set_3_low_x=$12b8
+    .label set_4_high_x=$12da
+    .label store_4_msb_x=$12fb
+    .label store_3_msb_x=$12ca
+    .label set_3_high_x=$12a9
+    .label set_1_x=$123a
+    .label set_1_low_x=$1256
+    .label set_2_x=$126b
+    .label store_2_msb_x=$1299
+    .label set_3_x=$129c
+    .label draw_end=$12fe
+  }
+}
+.label active_lane=$107b
+.label lane4_shape_x=$1083
+.label selected_lane=$107a
+.label player=$10dc {
+  .label setup=$10dc {
+  }
+  .label key_check=$10ec {
+    .label f7=$1128
+    .label end_nopress=$1135
+    .label f1=$10fb
+    .label end_withpress=$1134
+    .label f3=$110a
+    .label f5=$1119
+  }
+}
+.label block_rnd=$1001
+.label title_text=$13a7 {
+  .label line3_draw=$13cd {
+  }
+  .label line2_draw=$13ba {
+  }
+  .label line1_draw=$13a7 {
+  }
+}
+.label lane_rnd=$1000
