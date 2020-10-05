@@ -3,12 +3,18 @@
 
 // OPTIONS
 .var BLOCK_SPEED = 2
+.var LANE_1_Y = 78
+.var LANE_2_Y = 124
+.var LANE_3_Y = 170
+.var LANE_4_Y = 216
 
 BasicUpstart2(main)
 
 *= $1000 "Main Program"
 
 // VARIABLES
+main_loop_flag: .byte $00
+
 lane_rnd: .byte 1
 block_rnd: .byte 3
 
@@ -49,8 +55,7 @@ main: {
 
         // main loop
         !: 
-            
-            // FIX RANDOMISATION
+            /* broken randomisation */
             lr:
                 inc lane_rnd
                 lda lane_rnd
@@ -66,22 +71,22 @@ main: {
                 lda #1
                 sta block_rnd
             
+
             main:
-                // wait for raster line
-                lda RASTER_LINE
-                cmp #$ff
+                lda main_loop_flag
+                cmp #$01
                 bne !-
-                    
+
+                inc BORDER_COLOR
+
                 jsr shapes.move
                 jsr shapes.draw
                 jsr shapes.randomise
                 jsr player.key_check
                 
-                // wait for raster line
-                lda RASTER_LINE
-                cmp #$80
-                bne !-
-                
+                dec main_loop_flag
+                dec BORDER_COLOR
+
                 jmp !-
     }
 
@@ -178,6 +183,7 @@ shapes: {
         sta SPRITE_COLOR_1
         sta SPRITE_COLOR_2
         sta SPRITE_COLOR_3
+        lda #WHITE
         sta SPRITE_COLOR_4
         sta SPRITE_COLOR_5
         sta SPRITE_COLOR_6
@@ -207,13 +213,13 @@ shapes: {
         sta SPRITE_5_X
         sta SPRITE_6_X
         sta SPRITE_7_X
-        lda #65
+        lda #LANE_1_Y
         sta SPRITE_4_Y
-        lda #115
+        lda #LANE_2_Y
         sta SPRITE_5_Y
-        lda #165
+        lda #LANE_3_Y
         sta SPRITE_6_Y
-        lda #215
+        lda #LANE_4_Y
         sta SPRITE_7_Y
 
         lda #%11111111
@@ -476,7 +482,7 @@ shapes: {
 // SCREEN OPERATIONS
 screen: {
     clear: {
-        lda #DARK_GRAY
+        lda #BLACK
         sta BORDER_COLOR
         lda #RED
         sta SCREEN_COLOR
@@ -550,7 +556,7 @@ interrupts: {
         and #%01111111
         sta RASTER_LINE_MSB
         
-        lda #50
+        lda #66
         sta RASTER_LINE
         lda #<lane1
         sta INTERRUPT_EXECUTION_LOW
@@ -563,21 +569,26 @@ interrupts: {
 
     lane1:
 
-        lda #65
+        lda #LANE_1_Y
         sta SPRITE_0_Y
         sta SPRITE_1_Y
         sta SPRITE_2_Y
         sta SPRITE_3_Y
         
-        ldx #YELLOW
         lda selected_lane
         cmp #$01
         bne !+
-
         ldx #WHITE
+        jmp lane1_draw
     !:
+        ldx #YELLOW
+    lane1_draw:
+        lda RASTER_LINE
+        cmp #67
+        bne !-
         stx SCREEN_COLOR
-        lda #100
+
+        lda #112
         sta RASTER_LINE
         lda #<lane2
         sta INTERRUPT_EXECUTION_LOW
@@ -588,7 +599,7 @@ interrupts: {
 
     lane2:
 
-        lda #115
+        lda #LANE_2_Y
         sta SPRITE_0_Y
         sta SPRITE_1_Y
         sta SPRITE_2_Y
@@ -602,7 +613,7 @@ interrupts: {
         ldx #WHITE
     !:
         stx SCREEN_COLOR
-        lda #150
+        lda #158
         sta RASTER_LINE
         lda #<lane3
         sta INTERRUPT_EXECUTION_LOW
@@ -613,7 +624,7 @@ interrupts: {
 
     lane3:
 
-        lda #165
+        lda #LANE_3_Y
         sta SPRITE_0_Y
         sta SPRITE_1_Y
         sta SPRITE_2_Y
@@ -627,7 +638,7 @@ interrupts: {
         ldx #WHITE
     !:
         stx SCREEN_COLOR
-        lda #200
+        lda #204
         sta RASTER_LINE
         lda #<lane4
         sta INTERRUPT_EXECUTION_LOW
@@ -637,13 +648,7 @@ interrupts: {
         jmp acknowledge
 
     lane4:
-        //pha
-        //txa 
-        //pha
-        //tya 
-        //pha
-
-        lda #215
+        lda #LANE_4_Y
         sta SPRITE_0_Y
         sta SPRITE_1_Y
         sta SPRITE_2_Y
@@ -657,7 +662,30 @@ interrupts: {
         ldx #WHITE
     !:
         stx SCREEN_COLOR
-        lda #50
+        lda #250
+        sta RASTER_LINE
+        lda #<finish
+        sta INTERRUPT_EXECUTION_LOW
+        lda #>finish
+        sta INTERRUPT_EXECUTION_HIGH
+
+        jmp acknowledge 
+
+
+    finish:
+        lda #215
+        sta SPRITE_0_Y
+        sta SPRITE_1_Y
+        sta SPRITE_2_Y
+        sta SPRITE_3_Y
+
+        lda #$01
+        sta main_loop_flag
+        
+        ldx #BLACK
+    !:
+        stx SCREEN_COLOR
+        lda #66
         sta RASTER_LINE
         lda #<lane1
         sta INTERRUPT_EXECUTION_LOW
@@ -668,11 +696,6 @@ interrupts: {
 
     acknowledge:
         dec INTERRUPT_STATUS
-        //pla 
-        //tay 
-        //pla 
-        //tax 
-        //pla
         jmp SYS_IRQ_HANDLER
 }
 

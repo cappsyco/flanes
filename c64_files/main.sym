@@ -1,98 +1,101 @@
-.label screen=$1383 {
-  .label clear=$1383 {
+.label screen=$1388 {
+  .label clear=$1388 {
   }
-  .label text_color=$1391 {
-  }
-}
-.label active_lane_movement=$107c
-.label main=$1085 {
-  .label game=$1095 {
-    .label br=$10b0
-    .label lr=$10a1
-    .label main=$10bf
-  }
-  .label title=$1085 {
+  .label text_color=$1396 {
   }
 }
-.label lane1_shape_x=$107d
-.label lane3_shape_x=$1081
-.label interrupts=$13de {
-  .label init=$13de
-  .label acknowledge=$14bd
-  .label lane4=$148f
-  .label lane3=$1461
-  .label lane2=$1433
-  .label lane1=$1405
-}
-.label title1=$1002
-.label title2=$102a
-.label title3=$1052
-.label lane2_shape_x=$107f
-.label shapes=$113b {
-  .label move=$11cb {
-    .label set_lane=$11d2
-    .label move_3_x=$1216
-    .label move_4_x=$1229
-    .label move_1_x=$11f0
-    .label move_end=$1239
-    .label move_2_x=$1203
-    .label move_active=$11dd
+.label active_lane_movement=$107d
+.label main=$1086 {
+  .label game=$1096 {
+    .label br=$10b1
+    .label lr=$10a2
+    .label main=$10c0
   }
-  .label randomise=$1317 {
-    .label set_shape_2=$132f
-    .label set_shape_1=$132a
-    .label randomise_end=$1382
-    .label randomise_shape_3=$1360
-    .label randomise_shape_4=$1371
-    .label set_shape_4=$1339
-    .label randomise_shape_1=$133e
-    .label set_shape_3=$1334
-    .label randomise_shape_2=$134f
-  }
-  .label setup=$113b {
-  }
-  .label draw=$123a {
-    .label set_2_low_x=$1287
-    .label store_1_msb_x=$1268
-    .label set_4_x=$12cd
-    .label set_2_high_x=$1278
-    .label set_1_high_x=$1247
-    .label set_4_low_x=$12e9
-    .label set_3_low_x=$12b8
-    .label set_4_high_x=$12da
-    .label store_4_msb_x=$12fb
-    .label store_3_msb_x=$12ca
-    .label set_3_high_x=$12a9
-    .label set_1_x=$123a
-    .label set_1_low_x=$1256
-    .label set_2_x=$126b
-    .label store_2_msb_x=$1299
-    .label set_3_x=$129c
-    .label draw_end=$12fe
+  .label title=$1086 {
   }
 }
-.label active_lane=$107b
-.label lane4_shape_x=$1083
-.label selected_lane=$107a
-.label player=$10dc {
-  .label setup=$10dc {
+.label lane1_shape_x=$107e
+.label lane3_shape_x=$1082
+.label interrupts=$13e3 {
+  .label init=$13e3
+  .label acknowledge=$14f6
+  .label lane4=$149e
+  .label lane3=$1470
+  .label lane1_draw=$1426
+  .label lane2=$1442
+  .label lane1=$140a
+  .label finish=$14cc
+}
+.label title1=$1003
+.label title2=$102b
+.label title3=$1053
+.label lane2_shape_x=$1080
+.label shapes=$113e {
+  .label move=$11d0 {
+    .label set_lane=$11d7
+    .label move_3_x=$121b
+    .label move_4_x=$122e
+    .label move_1_x=$11f5
+    .label move_end=$123e
+    .label move_2_x=$1208
+    .label move_active=$11e2
   }
-  .label key_check=$10ec {
-    .label f7=$1128
-    .label end_nopress=$1135
-    .label f1=$10fb
-    .label end_withpress=$1134
-    .label f3=$110a
-    .label f5=$1119
+  .label randomise=$131c {
+    .label set_shape_2=$1334
+    .label set_shape_1=$132f
+    .label randomise_end=$1387
+    .label randomise_shape_3=$1365
+    .label randomise_shape_4=$1376
+    .label set_shape_4=$133e
+    .label randomise_shape_1=$1343
+    .label set_shape_3=$1339
+    .label randomise_shape_2=$1354
+  }
+  .label setup=$113e {
+  }
+  .label draw=$123f {
+    .label set_2_low_x=$128c
+    .label store_1_msb_x=$126d
+    .label set_4_x=$12d2
+    .label set_2_high_x=$127d
+    .label set_1_high_x=$124c
+    .label set_4_low_x=$12ee
+    .label set_3_low_x=$12bd
+    .label set_4_high_x=$12df
+    .label store_4_msb_x=$1300
+    .label store_3_msb_x=$12cf
+    .label set_3_high_x=$12ae
+    .label set_1_x=$123f
+    .label set_1_low_x=$125b
+    .label set_2_x=$1270
+    .label store_2_msb_x=$129e
+    .label set_3_x=$12a1
+    .label draw_end=$1303
   }
 }
-.label block_rnd=$1001
-.label title_text=$13a7 {
-  .label line3_draw=$13cd {
+.label active_lane=$107c
+.label lane4_shape_x=$1084
+.label selected_lane=$107b
+.label player=$10df {
+  .label setup=$10df {
   }
-  .label line2_draw=$13ba {
-  }
-  .label line1_draw=$13a7 {
+  .label key_check=$10ef {
+    .label f7=$112b
+    .label end_nopress=$1138
+    .label f1=$10fe
+    .label end_withpress=$1137
+    .label f3=$110d
+    .label f5=$111c
   }
 }
-.label lane_rnd=$1000
+.label block_rnd=$1002
+.label main_loop_flag=$1000
+.label title_text=$13ac {
+  .label line3_draw=$13d2 {
+  }
+  .label line2_draw=$13bf {
+  }
+  .label line1_draw=$13ac {
+  }
+}
+.label lane_rnd=$1001
