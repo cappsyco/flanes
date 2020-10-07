@@ -1,0 +1,108 @@
+.label active_lane_movement=$10a5
+.label lane1_shape_x=$10a6
+.label interrupts=$1415 {
+  .label init=$1415
+  .label acknowledge=$1528
+  .label lane4=$14d0
+  .label lane3=$14a2
+  .label lane1_draw=$1458
+  .label lane2=$1474
+  .label lane1=$143c
+  .label finish=$14fe
+}
+.label title1=$1003
+.label title2=$102b
+.label title3=$1053
+.label lane4_shape_x=$10ac
+.label main_loop_flag=$1000
+.label lane_rnd=$1001
+.label screen=$13cf {
+  .label clear=$13cf {
+  }
+  .label text_color=$13dd {
+  }
+}
+.label main=$10ae {
+  .label game=$10be {
+    .label br=$10df
+    .label lr=$10d0
+    .label main=$10ee
+  }
+  .label title=$10ae {
+  }
+}
+.label lane3_shape_x=$10aa
+.label hud_text=$107b
+.label lane2_shape_x=$10a8
+.label shapes=$116c {
+  .label move=$11fe {
+    .label set_lane=$1205
+    .label move_3_x=$1249
+    .label move_4_x=$125c
+    .label move_1_x=$1223
+    .label move_end=$126c
+    .label move_2_x=$1236
+    .label move_active=$1210
+  }
+  .label randomise=$134a {
+    .label set_shape_2=$1362
+    .label set_shape_1=$135d
+    .label randomise_end=$13b5
+    .label randomise_shape_3=$1393
+    .label randomise_shape_4=$13a4
+    .label set_shape_4=$136c
+    .label randomise_shape_1=$1371
+    .label set_shape_3=$1367
+    .label randomise_shape_2=$1382
+  }
+  .label setup=$116c {
+  }
+  .label draw=$126d {
+    .label set_2_low_x=$12ba
+    .label store_1_msb_x=$129b
+    .label set_4_x=$1300
+    .label set_2_high_x=$12ab
+    .label set_1_high_x=$127a
+    .label set_4_low_x=$131c
+    .label set_3_low_x=$12eb
+    .label set_4_high_x=$130d
+    .label store_4_msb_x=$132e
+    .label store_3_msb_x=$12fd
+    .label set_3_high_x=$12dc
+    .label set_1_x=$126d
+    .label set_1_low_x=$1289
+    .label set_2_x=$129e
+    .label store_2_msb_x=$12cc
+    .label set_3_x=$12cf
+    .label draw_end=$1331
+  }
+}
+.label active_lane=$10a4
+.label selected_lane=$10a3
+.label player=$110d {
+  .label setup=$110d {
+  }
+  .label key_check=$111d {
+    .label f7=$1159
+    .label end_nopress=$1166
+    .label f1=$112c
+    .label end_withpress=$1165
+    .label f3=$113b
+    .label f5=$114a
+  }
+}
+.label block_rnd=$1002
+.label hud=$13b6 {
+  .label color=$13b6 {
+  }
+  .label draw=$13c1 {
+  }
+}
+.label title_text=$13f3 {
+  .label line3_draw=$1409 {
+  }
+  .label line2_draw=$13fe {
+  }
+  .label line1_draw=$13f3 {
+  }
+}

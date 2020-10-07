@@ -19,17 +19,19 @@ lane_rnd: .byte 1
 block_rnd: .byte 3
 
 title1: .text "                 flanes                 "
-title2: .text "         press 'fire' to start!         "
+title2: .text "         press 'space' to start         "
 title3: .text "        by jonathan capps (2020)        "
+
+hud_text: .text "lives: 3                   score: 000000"
 
 selected_lane: .byte 0
 active_lane: .byte 0
 active_lane_movement: .byte 0
 
-lane1_shape_x: .byte 0,0
-lane2_shape_x: .byte 0,0
-lane3_shape_x: .byte 0,0
-lane4_shape_x: .byte 0,0
+lane1_shape_x: .byte $00,$00
+lane2_shape_x: .byte $00,$00
+lane3_shape_x: .byte $00,$00
+lane4_shape_x: .byte $00,$00
 
 // MAIN PROGRAM
 main: {
@@ -52,6 +54,8 @@ main: {
         jsr screen.clear
         jsr player.setup
         jsr shapes.setup
+        jsr hud.color
+        jsr hud.draw
 
         // main loop
         !: 
@@ -479,6 +483,35 @@ shapes: {
 
 }
 
+hud: {
+
+    color: {
+
+            ldx #$28
+            lda #WHITE
+        !: 
+            dex
+            sta COLOR_RAM,x
+            bne !-
+            rts
+
+    }
+
+    draw: {
+
+            ldx #$00
+        !: 
+            lda hud_text,x
+            sta SCREEN_RAM,x
+            inx
+            cpx #$28
+            bne !-
+            rts
+
+    }
+
+}
+
 // SCREEN OPERATIONS
 screen: {
     clear: {
@@ -493,10 +526,10 @@ screen: {
             lda #WHITE
             ldx #0
         !:
-            sta TXTCOLOR_START,x
-            sta TXTCOLOR_START + 250,x
-            sta TXTCOLOR_START + 500,x
-            sta TXTCOLOR_START + 750,x
+            sta COLOR_RAM,x
+            sta COLOR_RAM + 250,x
+            sta COLOR_RAM + 500,x
+            sta COLOR_RAM + 750,x
             inx
             cpx #250
             bne !-
@@ -508,36 +541,30 @@ screen: {
 title_text: {
 
     line1_draw: {
-            ldx #$00
-            jmp !+
+            ldx #$28
         !:
+            dex
             lda title1,x
             sta $0590,x
-            inx
-            cpx #$28
             bne !-
-            jmp line2_draw
     }
     line2_draw: {
-            ldx #$00
-            jmp !+
+            ldx #$28
         !:
+            dex
             lda title2,x
             sta $05e0,x
-            inx
-            cpx #$28
             bne !-
-            jmp line3_draw
     }      
+    
     line3_draw: {
-            ldx #$00
-            jmp !+
+            ldx #$28
         !:
+            dex
             lda title3,x
             sta $0798,x
-            inx
-            cpx #$28
             bne !-
+        
     }
     rts
 }

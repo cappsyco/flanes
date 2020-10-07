@@ -3,6 +3,9 @@
 //screen colors
 .const	BORDER_COLOR = $D020
 .const	SCREEN_COLOR = $D021
+// screen
+.const  COLOR_RAM = $d800
+.const  SCREEN_RAM = $0400
 //raster line
 .const	RASTER_LINE = $D012                  // bits 0-7
 .const	RASTER_LINE_MSB = $D011                  // bit 7 is MSB

@@ -1,5 +1,4 @@
 .var CLEAR_SCREEN = $e544
-.var TXTCOLOR_START = $d800
 .var PORT_REG_A = $dc00
 .var PORT_REG_B = $dc01
 .var DD_REG_A = $dc02
