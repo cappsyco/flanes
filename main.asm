@@ -22,11 +22,13 @@ title1: .text "                 flanes                 "
 title2: .text "         press 'space' to start         "
 title3: .text "        by jonathan capps (2020)        "
 
-hud_text: .text "lives: 3                   score: 000000"
+hud_text: .text "lives : 3                 score : 000000"
 
-selected_lane: .byte 0
-active_lane: .byte 0
-active_lane_movement: .byte 0
+scorecount: .byte 0,0,0
+
+selected_lane: .byte $00
+active_lane: .byte $00
+active_lane_movement: .byte $00
 
 lane1_shape_x: .byte $00,$00
 lane2_shape_x: .byte $00,$00
@@ -39,7 +41,7 @@ main: {
         // screen setup
         jsr screen.clear
         jsr screen.text_color
-        jsr title_text
+        jsr titletext
 
         // wait for space press
         !:
@@ -148,11 +150,70 @@ player: {
             lda #$04
             sta selected_lane
         end_withpress:
+            jsr score.increase
             rts
         end_nopress:
             lda #$00
             sta selected_lane
             rts
+    }
+
+}
+
+// SCORE
+score: {
+
+    increase: {
+
+        sed
+        clc
+        lda scorecount
+        adc #10
+        sta scorecount
+        lda scorecount+1
+        adc #0
+        sta scorecount+1
+        lda scorecount+2
+        adc #0
+        sta scorecount+2
+        cld
+        jmp process
+
+        rts
+
+    }
+    process: {
+
+            ldy #$27
+            ldx #$00
+
+        !:
+            lda scorecount,x
+            pha
+            and #$0f
+            jsr draw
+
+            pla
+            lsr
+            lsr
+            lsr
+            lsr
+            jsr draw
+            inx
+            cpx #3
+            bne !-
+            rts
+
+    }
+
+    draw: {
+
+        clc
+        adc #48
+        sta SCREEN_RAM,y
+        dey
+        rts
+
     }
 
 }
@@ -487,29 +548,56 @@ hud: {
 
     color: {
 
-            ldx #$28
+            ldx #$27
             lda #WHITE
         !: 
-            dex
             sta COLOR_RAM,x
-            bne !-
+            dex
+            bpl !-
             rts
 
     }
 
     draw: {
 
-            ldx #$00
+            ldx #$27
         !: 
             lda hud_text,x
             sta SCREEN_RAM,x
-            inx
-            cpx #$28
-            bne !-
+            dex
+            bpl !-
             rts
 
     }
 
+}
+
+// TEXT DRAWING OPERATIONS
+titletext: {
+
+    line1_draw:
+            ldx #$27
+        !:
+            lda title1,x
+            sta $0590,x
+            dex
+            bpl !-
+    line2_draw:
+            ldx #$27
+        !:
+            lda title2,x
+            sta $05e0,x
+            dex
+            bpl !-
+    line3_draw:
+            ldx #$27
+        !:
+            lda title3,x
+            sta $0798,x
+            dex
+            bpl !-
+            rts
+            
 }
 
 // SCREEN OPERATIONS
@@ -535,38 +623,6 @@ screen: {
             bne !-
             rts
         }
-}
-
-// TEXT DRAWING OPERATIONS
-title_text: {
-
-    line1_draw: {
-            ldx #$28
-        !:
-            dex
-            lda title1,x
-            sta $0590,x
-            bne !-
-    }
-    line2_draw: {
-            ldx #$28
-        !:
-            dex
-            lda title2,x
-            sta $05e0,x
-            bne !-
-    }      
-    
-    line3_draw: {
-            ldx #$28
-        !:
-            dex
-            lda title3,x
-            sta $0798,x
-            bne !-
-        
-    }
-    rts
 }
 
 // INTERRUPTS
