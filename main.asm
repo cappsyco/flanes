@@ -14,13 +14,6 @@ BasicUpstart2(MAIN)
 // VARIABLES
 mainloop_flag: .byte $00
 
-/*
-titlename1: .text "  UCCCC I     UCCCI U   U UCCCC UCCCC   "
-titlename2: .text "  B     B     B   B BM  B B     B       "
-titlename3: .text "  BDD   B     BDDDB B M B BDD   JCCCI   "
-titlename4: .text "  B     B     B   B B  MB B         B   "
-titlename5: .text "  B     JCCCC K   J K   K JCCCC CCCCK   "
-*/
 .encoding "petscii_mixed"
 titlename1: .text "  UCCCC B     UCCCI UCI B UCCCC UCCCC   "
 titlename2: .text "  B     B     B   B B B B B     B       "
@@ -32,8 +25,7 @@ titlename5: .text "  B     JCCCC B   B B JCK JCCCC CCCCK   "
 titleinstruction: .text "         press 'space' to start         "
 titlecredit: .text      "        by jonathan capps (2020)        "
 
-lanecolors: .byte YELLOW, GREEN, CYAN, LIGHT_RED
-//lane
+lanecolors: .byte YELLOW, GREEN, CYAN, LIGHT_RED, YELLOW, GREEN, CYAN, LIGHT_RED
 
 gameover1: .text           "               game over!               "
 gameover2: .text           "        press 'space' to restart        "
@@ -87,7 +79,20 @@ MAIN: {
         sta lives_count
     }
 
+    title_start: {
+        ldy #$00
+    }
     title: {
+
+        lda RASTER_LINE
+        cmp #68
+        bne title
+
+        iny
+        cpy #$04
+        beq title_start
+
+        jsr SCREEN.title_color_ramp
         lda PORT_REG_B
         cmp #$ef
         bne title
@@ -458,7 +463,7 @@ SCREEN: {
             jsr CLEAR_SCREEN
             rts
     }
-        
+
     text_color: {
 
         white:
@@ -557,6 +562,49 @@ SCREEN: {
                 rts
     }
 
+    title_color_ramp: {
+
+        .label TITLE_COLOR_START = COLOR_RAM + 80
+
+        title1_color:
+                ldx #$27
+            !:
+                lda lanecolors,y
+                sta TITLE_COLOR_START,x
+                dex
+                bpl !-
+        title2_color:
+                ldx #$27
+            !:
+                lda lanecolors + 1,y
+                sta TITLE_COLOR_START + 40,x
+                dex
+                bpl !-
+        title3_color:
+                ldx #$27
+            !:
+                lda lanecolors + 2,y 
+                sta TITLE_COLOR_START + 80,x
+                dex
+                bpl !-  
+        title4_color:
+                ldx #$27
+            !:
+                lda lanecolors + 3,y
+                sta TITLE_COLOR_START + 120,x
+                dex
+                bpl !-
+        title5_color:
+                ldx #$27
+            !:
+                lda lanecolors + 4,y
+                sta TITLE_COLOR_START + 160,x
+                dex
+                bpl !-
+
+
+    }
+
     debug_number: {
 
         clc
@@ -602,7 +650,7 @@ INTERRUPTS: {
         ldx #WHITE
         jmp lane1_draw
     !:
-        ldx lanecolors + 4
+        ldx lanecolors
     lane1_draw:
         lda RASTER_LINE
         cmp #68
@@ -743,7 +791,7 @@ INTERRUPTS: {
     finish:
         lda #$01
         sta mainloop_flag
-        
+
         ldx #BLACK
         lda RASTER_LINE
         cmp #252
