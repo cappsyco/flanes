@@ -76,3 +76,4 @@
 //interrupt registers
 .const	INTERRUPT_EVENT = $D019
 .const	INTERRUPT_ENABLE = $D01A
+.const  INTERRUPT_REG = $dc0d
