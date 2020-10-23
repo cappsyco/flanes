@@ -3,23 +3,23 @@
 .label active_lane_movement=$100a
 .label txt_hud=$1177
 .label SCREEN=$1418 {
-  .label gameover_text=$143f {
-    .label gameover2_draw=$144a
-    .label gameover1_draw=$143f
+  .label gameover_text=$148d {
+    .label gameover2_draw=$1498
+    .label gameover1_draw=$148d
   }
   .label debug_number=$14a4 {
   }
   .label clear=$1418 {
   }
-  .label title_text=$1456 {
-    .label title3_draw=$146c
-    .label instruction_draw=$148d
-    .label title1_draw=$1456
+  .label title_text=$143f {
+    .label title3_draw=$1455
+    .label instruction_draw=$1476
+    .label title1_draw=$143f
     .label TITLE_START=$450
-    .label title5_draw=$1482
-    .label title2_draw=$1461
-    .label title4_draw=$1477
-    .label credit_draw=$1498
+    .label title5_draw=$146b
+    .label title2_draw=$144a
+    .label title4_draw=$1460
+    .label credit_draw=$1481
   }
   .label text_color=$1424 {
     .label white=$1424
