@@ -11,53 +11,46 @@ BasicUpstart2(MAIN)
 
 *= $1000 "Main Program"
 
-// VARIABLES
+// FLAGS
+game_state: .byte $00
 mainloop_flag: .byte $00
-
-/*
-titlename1: .text "  UCCCC I     UCCCI U   U UCCCC UCCCC   "
-titlename2: .text "  B     B     B   B BM  B B     B       "
-titlename3: .text "  BDD   B     BDDDB B M B BDD   JCCCI   "
-titlename4: .text "  B     B     B   B B  MB B         B   "
-titlename5: .text "  B     JCCCC K   J K   K JCCCC CCCCK   "
-*/
-.encoding "petscii_mixed"
-titlename1: .text "  UCCCC B     UCCCI UCI B UCCCC UCCCC   "
-titlename2: .text "  B     B     B   B B B B B     B       "
-titlename3: .text "  BDD   B     BDDDB B B B BDD   JCCCI   "
-titlename4: .text "  B     B     B   B B B B B         B   "
-titlename5: .text "  B     JCCCC B   B B JCK JCCCC CCCCK   "
-
-.encoding "screencode_mixed"
-titleinstruction: .text "         press 'space' to start         "
-titlecredit: .text      "        by jonathan capps (2020)        "
-
-lanecolors: .byte YELLOW, GREEN, CYAN, LIGHT_RED
-//lane
-
-gameover1: .text           "               game over!               "
-gameover2: .text           "        press 'space' to restart        "
-
-hud_text: .text "lives : ?                 score : 000000"
-
-rnd_avoid: .byte 0
-
 key_pressed: .byte $00
-score_count: .byte 0,0,0
-difficulty_increment: .byte 0
-lives_count: .byte 4
 
+// GAME LOGIC
+score_count: .byte 0,0,0
+lives_count: .byte 4
+difficulty_increment: .byte 0
 selected_lane: .byte 0
 active_lane: .byte 0
 active_lane_movement: .byte 0
-
+rnd_avoid: .byte 0
 lane_shape_speed: .byte 2
 lane_shape_x: .byte $00,$00
+
+// GAME TEXT
+.encoding "petscii_mixed"
+txt_titlename1: .text "  UCCCC B     UCCCI UCI B UCCCC UCCCC   "
+txt_titlename2: .text "  B     B     B   B B B B B     B       "
+txt_titlename3: .text "  BDD   B     BDDDB B B B BDD   JCCCI   "
+txt_titlename4: .text "  B     B     B   B B B B B         B   "
+txt_titlename5: .text "  B     JCCCC B   B B JCK JCCCC CCCCK   "
+
+.encoding "screencode_mixed"
+txt_titleinstruction: .text "         press 'space' to start         "
+txt_titlecredit: .text      "        by jonathan capps (2020)        "
+txt_gameover1: .text        "               game over!               "
+txt_gameover2: .text        "        press 'space' to restart        "
+txt_hud: .text         "lives : ?                 score : 000000"
+
+// COLORS
+lanecolors: .byte YELLOW, GREEN, CYAN, LIGHT_RED
+titlecolor_index: .byte $00
 
 // MAIN PROGRAM
 MAIN: {
 
     setup: {
+        jsr INTERRUPTS.init
         jsr SCREEN.clear
         jsr SCREEN.title_text
         jsr SCREEN.text_color.white
@@ -65,9 +58,12 @@ MAIN: {
     }
     
     gameover: {
+        lda #$02
+        sta game_state
+        
         jsr SCREEN.clear
         jsr SCREEN.gameover_text
-        jsr SCREEN.text_color.black
+        jsr SCREEN.text_color.white
         jsr SHAPES.clear
     }
     
@@ -95,7 +91,9 @@ MAIN: {
 
     game: {
         // game setup
-        jsr INTERRUPTS.init
+        lda #$01
+        sta game_state
+
         jsr SCREEN.clear
         jsr SHAPES.setup
         jsr HUD.color
@@ -438,7 +436,7 @@ HUD: {
     draw: {
             ldx #$27
         !: 
-            lda hud_text,x
+            lda txt_hud,x
             sta SCREEN_RAM,x
             dex
             bpl !-
@@ -451,12 +449,11 @@ HUD: {
 SCREEN: {
 
     clear: {
-            lda #BLACK
-            sta BORDER_COLOR
-            //lda #RED
-            sta SCREEN_COLOR
-            jsr CLEAR_SCREEN
-            rts
+        lda #BLACK
+        sta BORDER_COLOR
+        sta SCREEN_COLOR
+        jsr CLEAR_SCREEN
+        rts
     }
         
     text_color: {
@@ -478,26 +475,7 @@ SCREEN: {
                 bne !-
                 rts
             
-    }
-
-    gameover_text: {
-
-        gameover1_draw:
-                ldx #$27
-            !:
-                lda gameover1,x
-                sta $0568,x
-                dex
-                bpl !-
-        gameover2_draw:
-                ldx #$27
-            !:
-                lda gameover2,x
-                sta $05b8,x
-                dex
-                bpl !-
-                rts
-    }
+    }    
 
     title_text: {
 
@@ -506,35 +484,35 @@ SCREEN: {
         title1_draw:
                 ldx #$27
             !:
-                lda titlename1,x
+                lda txt_titlename1,x
                 sta TITLE_START,x
                 dex
                 bpl !-
         title2_draw:
                 ldx #$27
             !:
-                lda titlename2,x
+                lda txt_titlename2,x
                 sta TITLE_START + 40,x
                 dex
                 bpl !-
         title3_draw:
                 ldx #$27
             !:
-                lda titlename3,x
+                lda txt_titlename3,x
                 sta TITLE_START + 80,x
                 dex
                 bpl !-  
         title4_draw:
                 ldx #$27
             !:
-                lda titlename4,x
+                lda txt_titlename4,x
                 sta TITLE_START + 120,x
                 dex
                 bpl !-
         title5_draw:
                 ldx #$27
             !:
-                lda titlename5,x
+                lda txt_titlename5,x
                 sta TITLE_START + 160,x
                 dex
                 bpl !-
@@ -542,28 +520,45 @@ SCREEN: {
         instruction_draw:
                 ldx #$27
             !:
-                lda titleinstruction,x
+                lda txt_titleinstruction,x
                 sta $0680,x
                 dex
                 bpl !-    
+
         credit_draw:
                 ldx #$27
             !:
-                lda titlecredit,x
+                lda txt_titlecredit,x
                 sta $798,x
                 dex
                 bpl !-   
+        rts
+    }
 
-                rts
+    gameover_text: {
+
+        gameover1_draw:
+                ldx #$27
+            !:
+                lda txt_gameover1,x
+                sta $0568,x
+                dex
+                bpl !-
+        gameover2_draw:
+                ldx #$27
+            !:
+                lda txt_gameover2,x
+                sta $05e0,x
+                dex
+                bpl !-
+        rts
     }
 
     debug_number: {
-
         clc
         adc #48
         sta SCREEN_RAM + 40
         rts
-
     }
 
 }
@@ -571,7 +566,7 @@ SCREEN: {
 // INTERRUPTS
 INTERRUPTS: {
     
-    init:
+    init: {
         sei
         
         lda #%01111111
@@ -580,11 +575,11 @@ INTERRUPTS: {
         and #%01111111
         sta RASTER_LINE_MSB
         
-        lda #66
+        lda #0
         sta RASTER_LINE
-        lda #<lane1
+        lda #<gateway
         sta INTERRUPT_EXECUTION_LOW
-        lda #>lane1
+        lda #>gateway
         sta INTERRUPT_EXECUTION_HIGH
 
         lda INTERRUPT_ENABLE
@@ -594,170 +589,199 @@ INTERRUPTS: {
         cli
 
         rts
-
-    lane1:
-        lda selected_lane
-        cmp #$01
-        bne !+
-        ldx #WHITE
-        jmp lane1_draw
-    !:
-        ldx lanecolors + 4
-    lane1_draw:
-        lda RASTER_LINE
-        cmp #68
-        bne lane1_draw
-        stx SCREEN_COLOR
-
-        lda #LANE_1_Y
-        sta SPRITE_1_Y
-
-        lda #69
-        sta SPRITE_2_Y
-        lda #89
-        sta SPRITE_3_Y
-
-        lda #BLUE
-        sta SPRITE_COLOR_0
-        sta SPRITE_COLOR_2
-        sta SPRITE_COLOR_3
-
-        lda #110
-        sta RASTER_LINE
-        lda #<lane2
-        sta INTERRUPT_EXECUTION_LOW
-        lda #>lane2
-        sta INTERRUPT_EXECUTION_HIGH
-
-        jmp acknowledge
-
-    lane2:
-        lda selected_lane
-        cmp #$02
-        bne !+
-        ldx #WHITE
-        jmp lane2_draw
-    !:
-        ldx lanecolors + 1
-    lane2_draw:
-        lda RASTER_LINE
-        cmp #113
-        bne lane2_draw
-        stx SCREEN_COLOR
-
-        lda #LANE_2_Y
-        sta SPRITE_1_Y
-
-        lda #115
-        sta SPRITE_2_Y
-        lda #135
-        sta SPRITE_3_Y
-
-        lda #PURPLE
-        sta SPRITE_COLOR_0
-        sta SPRITE_COLOR_2
-        sta SPRITE_COLOR_3
-
-        lda #157
-        sta RASTER_LINE
-        lda #<lane3
-        sta INTERRUPT_EXECUTION_LOW
-        lda #>lane3
-        sta INTERRUPT_EXECUTION_HIGH
-
-        jmp acknowledge
-
-    lane3:
-        lda selected_lane
-        cmp #$02
-        bne !+
-        ldx #WHITE
-        jmp lane3_draw
-    !:
-        ldx lanecolors + 2
-    lane3_draw:
-        lda RASTER_LINE
-        cmp #159
-        bne lane3_draw
-        stx SCREEN_COLOR
+    }
         
-        lda #LANE_3_Y
-        sta SPRITE_1_Y
-
-        lda #161
-        sta SPRITE_2_Y
-        lda #181
-        sta SPRITE_3_Y
-
-        lda #LIGHT_RED
-        sta SPRITE_COLOR_0
-        sta SPRITE_COLOR_2
-        sta SPRITE_COLOR_3
+    gateway: {
+            lda game_state
+            cmp #$00
+            beq gateway_title
+            cmp #$01
+            beq gateway_game
+            cmp #$02
+            beq gateway_gameover
+            jmp acknowledge
         
-        lda #203
-        sta RASTER_LINE
-        lda #<lane4
-        sta INTERRUPT_EXECUTION_LOW
-        lda #>lane4
-        sta INTERRUPT_EXECUTION_HIGH
+        gateway_title:
+            jmp acknowledge
 
-        jmp acknowledge
+        gateway_game:
+            lda #66
+            sta RASTER_LINE
+            lda #<game_irqs
+            sta INTERRUPT_EXECUTION_LOW
+            lda #>game_irqs
+            sta INTERRUPT_EXECUTION_HIGH
+            jmp acknowledge
 
-    lane4:
-        lda selected_lane
-        cmp #$02
-        bne !+
-        ldx #WHITE
-        jmp lane4_draw
-    !:
-        ldx lanecolors + 3
-    lane4_draw:
-        lda RASTER_LINE
-        cmp #205
-        bne lane4_draw
-        stx SCREEN_COLOR
+        gateway_gameover:
+            jmp acknowledge
+    }
 
-        lda #LANE_4_Y
-        sta SPRITE_1_Y
-
-        lda #207
-        sta SPRITE_2_Y
-        lda #227
-        sta SPRITE_3_Y
-
-        lda #CYAN
-        sta SPRITE_COLOR_0
-        sta SPRITE_COLOR_2
-        sta SPRITE_COLOR_3
-
-        lda #250
-        sta RASTER_LINE
-        lda #<finish
-        sta INTERRUPT_EXECUTION_LOW
-        lda #>finish
-        sta INTERRUPT_EXECUTION_HIGH
-
-        jmp acknowledge 
-
-
-    finish:
-        lda #$01
-        sta mainloop_flag
+    game_irqs: {
         
-        ldx #BLACK
-        lda RASTER_LINE
-        cmp #252
-        bne finish
-        stx SCREEN_COLOR
-        
-        lda #66
-        sta RASTER_LINE
-        lda #<lane1
-        sta INTERRUPT_EXECUTION_LOW
-        lda #>lane1
-        sta INTERRUPT_EXECUTION_HIGH
+        lane1:
+            lda selected_lane
+            cmp #$01
+            bne !+
+            ldx #WHITE
+            jmp lane1_draw
+        !:
+            ldx lanecolors
+        lane1_draw:
+            lda RASTER_LINE
+            cmp #68
+            bne lane1_draw
+            stx SCREEN_COLOR
 
-        jmp acknowledge 
+            lda #LANE_1_Y
+            sta SPRITE_1_Y
+
+            lda #69
+            sta SPRITE_2_Y
+            lda #89
+            sta SPRITE_3_Y
+
+            lda #BLUE
+            sta SPRITE_COLOR_0
+            sta SPRITE_COLOR_2
+            sta SPRITE_COLOR_3
+
+            lda #110
+            sta RASTER_LINE
+            lda #<lane2
+            sta INTERRUPT_EXECUTION_LOW
+            lda #>lane2
+            sta INTERRUPT_EXECUTION_HIGH
+
+            jmp acknowledge
+
+        lane2:
+            lda selected_lane
+            cmp #$02
+            bne !+
+            ldx #WHITE
+            jmp lane2_draw
+        !:
+            ldx lanecolors + 1
+        lane2_draw:
+            lda RASTER_LINE
+            cmp #113
+            bne lane2_draw
+            stx SCREEN_COLOR
+
+            lda #LANE_2_Y
+            sta SPRITE_1_Y
+
+            lda #115
+            sta SPRITE_2_Y
+            lda #135
+            sta SPRITE_3_Y
+
+            lda #PURPLE
+            sta SPRITE_COLOR_0
+            sta SPRITE_COLOR_2
+            sta SPRITE_COLOR_3
+
+            lda #157
+            sta RASTER_LINE
+            lda #<lane3
+            sta INTERRUPT_EXECUTION_LOW
+            lda #>lane3
+            sta INTERRUPT_EXECUTION_HIGH
+
+            jmp acknowledge
+
+        lane3:
+            lda selected_lane
+            cmp #$02
+            bne !+
+            ldx #WHITE
+            jmp lane3_draw
+        !:
+            ldx lanecolors + 2
+        lane3_draw:
+            lda RASTER_LINE
+            cmp #159
+            bne lane3_draw
+            stx SCREEN_COLOR
+            
+            lda #LANE_3_Y
+            sta SPRITE_1_Y
+
+            lda #161
+            sta SPRITE_2_Y
+            lda #181
+            sta SPRITE_3_Y
+
+            lda #LIGHT_RED
+            sta SPRITE_COLOR_0
+            sta SPRITE_COLOR_2
+            sta SPRITE_COLOR_3
+            
+            lda #203
+            sta RASTER_LINE
+            lda #<lane4
+            sta INTERRUPT_EXECUTION_LOW
+            lda #>lane4
+            sta INTERRUPT_EXECUTION_HIGH
+
+            jmp acknowledge
+
+        lane4:
+            lda selected_lane
+            cmp #$02
+            bne !+
+            ldx #WHITE
+            jmp lane4_draw
+        !:
+            ldx lanecolors + 3
+        lane4_draw:
+            lda RASTER_LINE
+            cmp #205
+            bne lane4_draw
+            stx SCREEN_COLOR
+
+            lda #LANE_4_Y
+            sta SPRITE_1_Y
+
+            lda #207
+            sta SPRITE_2_Y
+            lda #227
+            sta SPRITE_3_Y
+
+            lda #CYAN
+            sta SPRITE_COLOR_0
+            sta SPRITE_COLOR_2
+            sta SPRITE_COLOR_3
+
+            lda #250
+            sta RASTER_LINE
+            lda #<lane_finish
+            sta INTERRUPT_EXECUTION_LOW
+            lda #>lane_finish
+            sta INTERRUPT_EXECUTION_HIGH
+
+            jmp acknowledge 
+
+        lane_finish:
+            lda #$01
+            sta mainloop_flag
+            
+            ldx #BLACK
+            lda RASTER_LINE
+            cmp #252
+            bne lane_finish
+            stx SCREEN_COLOR
+            
+            lda #0
+            sta RASTER_LINE
+            lda #<gateway
+            sta INTERRUPT_EXECUTION_LOW
+            lda #>gateway
+            sta INTERRUPT_EXECUTION_HIGH
+
+            jmp acknowledge 
+    }
 
     acknowledge:
         dec INTERRUPT_STATUS

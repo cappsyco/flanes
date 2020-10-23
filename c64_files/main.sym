@@ -1,132 +1,142 @@
-.label active_lane_movement=$119e
-.label SCREEN=$140c {
-  .label gameover_text=$1433 {
-    .label gameover2_draw=$143e
-    .label gameover1_draw=$1433
+.label txt_gameover2=$114f
+.label txt_gameover1=$1127
+.label active_lane_movement=$100a
+.label txt_hud=$1177
+.label SCREEN=$1418 {
+  .label gameover_text=$143f {
+    .label gameover2_draw=$144a
+    .label gameover1_draw=$143f
   }
-  .label debug_number=$1498 {
+  .label debug_number=$14a4 {
   }
-  .label clear=$140c {
+  .label clear=$1418 {
   }
-  .label title_text=$144a {
-    .label title3_draw=$1460
-    .label instruction_draw=$1481
-    .label title1_draw=$144a
+  .label title_text=$1456 {
+    .label title3_draw=$146c
+    .label instruction_draw=$148d
+    .label title1_draw=$1456
     .label TITLE_START=$450
-    .label title5_draw=$1476
-    .label title2_draw=$1455
-    .label title4_draw=$146b
-    .label credit_draw=$148c
+    .label title5_draw=$1482
+    .label title2_draw=$1461
+    .label title4_draw=$1477
+    .label credit_draw=$1498
   }
-  .label text_color=$1418 {
-    .label white=$1418
-    .label black=$141d
-    .label set_color=$141f
-  }
-}
-.label GAMEPLAY=$1211 {
-  .label setup=$1211 {
-  }
-  .label update_lives=$1240 {
-  }
-  .label game_over=$124e {
-  }
-  .label key_check=$1251 {
-    .label f7=$128d
-    .label end_holdpress=$12b6
-    .label lose_life=$12bc
-    .label end_nopress=$12b1
-    .label f1=$1260
-    .label end_withpress=$1299
-    .label f3=$126f
-    .label f5=$127e
-  }
-  .label generate_rnd=$122e {
+  .label text_color=$1424 {
+    .label white=$1424
+    .label black=$1429
+    .label set_color=$142b
   }
 }
-.label lane_shape_x=$11a0
-.label INTERRUPTS=$149f {
-  .label init=$149f
-  .label lane2_draw=$151a
-  .label acknowledge=$15fd
-  .label lane4=$1595
-  .label lane3=$1550
-  .label lane1_draw=$14d5
-  .label lane2=$150b
-  .label lane1=$14c6
-  .label finish=$15da
-  .label lane3_draw=$155f
-  .label lane4_draw=$15a4
-}
-.label lane_shape_speed=$119f
-.label SHAPES=$1319 {
-  .label move=$136b {
-    .label set_lane=$1372
-    .label set_y_4=$13a5
-    .label set_y_3=$13a0
-    .label move_end=$13bb
-    .label move_x=$13a7
-    .label set_y_2=$139b
-    .label set_y_1=$1396
-    .label move_active=$1383
+.label GAMEPLAY=$121d {
+  .label setup=$121d {
   }
-  .label clear=$1319 {
+  .label update_lives=$124c {
   }
-  .label setup=$131f {
+  .label game_over=$125a {
   }
-  .label draw=$13bc {
-    .label set_low_x=$13d9
-    .label store_msb_x=$13eb
-    .label draw_end=$13ee
-    .label set_high_x=$13c9
-    .label set_x=$13bc
+  .label key_check=$125d {
+    .label f7=$1299
+    .label end_holdpress=$12c2
+    .label lose_life=$12c8
+    .label end_nopress=$12bd
+    .label f1=$126c
+    .label end_withpress=$12a5
+    .label f3=$127b
+    .label f5=$128a
+  }
+  .label generate_rnd=$123a {
   }
 }
-.label score_count=$1197
-.label MAIN=$11a2 {
-  .label game=$11e6 {
-    .label mainloop=$11fb
+.label lane_shape_x=$100d
+.label INTERRUPTS=$14ab {
+  .label init=$14ab {
   }
-  .label setup=$11a2 {
+  .label acknowledge=$1633
+  .label gateway=$14d2 {
+    .label gateway_gameover=$14f9
+    .label gateway_title=$14e4
+    .label gateway_game=$14e7
   }
-  .label reset=$11ba {
-  }
-  .label title=$11df {
-  }
-  .label gameover=$11ae {
-  }
-}
-.label gameover2=$1145
-.label titlename5=$10a1
-.label gameover1=$111d
-.label titlename4=$1079
-.label titlename3=$1051
-.label titlecredit=$10f1
-.label titlename2=$1029
-.label titlename1=$1001
-.label hud_text=$116d
-.label key_pressed=$1196
-.label SCORE=$12c9 {
-  .label check_difficulty=$12e4 {
-  }
-  .label process=$12f3 {
-  }
-  .label draw=$1311 {
-  }
-  .label increase=$12c9 {
+  .label game_irqs=$14fc {
+    .label lane2_draw=$1550
+    .label lane_finish=$1610
+    .label lane4=$15cb
+    .label lane3=$1586
+    .label lane1_draw=$150b
+    .label lane2=$1541
+    .label lane1=$14fc
+    .label lane3_draw=$1595
+    .label lane4_draw=$15da
   }
 }
-.label rnd_avoid=$1195
-.label difficulty_increment=$119a
-.label HUD=$13f5 {
-  .label color=$13f5 {
+.label lane_shape_speed=$100c
+.label SHAPES=$1325 {
+  .label move=$1377 {
+    .label set_lane=$137e
+    .label set_y_4=$13b1
+    .label set_y_3=$13ac
+    .label move_end=$13c7
+    .label move_x=$13b3
+    .label set_y_2=$13a7
+    .label set_y_1=$13a2
+    .label move_active=$138f
   }
-  .label draw=$1400 {
+  .label clear=$1325 {
+  }
+  .label setup=$132b {
+  }
+  .label draw=$13c8 {
+    .label set_low_x=$13e5
+    .label store_msb_x=$13f7
+    .label draw_end=$13fa
+    .label set_high_x=$13d5
+    .label set_x=$13c8
   }
 }
-.label active_lane=$119d
-.label titleinstruction=$10c9
-.label mainloop_flag=$1000
-.label selected_lane=$119c
-.label lanecolors=$1119
-.label lives_count=$119b
+.label txt_titleinstruction=$10d7
+.label txt_titlename3=$105f
+.label txt_titlename2=$1037
+.label txt_titlename1=$100f
+.label score_count=$1003
+.label MAIN=$11a4 {
+  .label game=$11f0 {
+    .label mainloop=$1207
+  }
+  .label setup=$11a4 {
+  }
+  .label reset=$11c4 {
+  }
+  .label title=$11e9 {
+  }
+  .label gameover=$11b3 {
+  }
+}
+.label txt_titlecredit=$10ff
+.label txt_titlename5=$10af
+.label txt_titlename4=$1087
+.label key_pressed=$1002
+.label SCORE=$12d5 {
+  .label check_difficulty=$12f0 {
+  }
+  .label process=$12ff {
+  }
+  .label draw=$131d {
+  }
+  .label increase=$12d5 {
+  }
+}
+.label titlecolor_index=$11a3
+.label rnd_avoid=$100b
+.label difficulty_increment=$1007
+.label game_state=$1000
+.label HUD=$1401 {
+  .label color=$1401 {
+  }
+  .label draw=$140c {
+  }
+}
+.label active_lane=$1009
+.label mainloop_flag=$1001
+.label selected_lane=$1008
+.label lanecolors=$119f
+.label lives_count=$1006
