@@ -1,0 +1,8 @@
+// VOICE 1
+.const	SID_V1_FREQ_L = $D400
+.const	SID_V1_FREQ_H = $D401
+.const	SID_V1_PULSE_H = $D402
+.const	SID_V1_PULSE_L = $D403
+.const	SID_V1_CONTROL = $D404
+.const	SID_V1_ATTDEC_L = $D405
+.const	SID_V1_VOL_LEN = $D406

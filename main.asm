@@ -15,6 +15,7 @@ BasicUpstart2(MAIN)
 game_state: .byte $00
 mainloop_flag: .byte $00
 key_pressed: .byte $00
+zero_score: .byte $01
 
 // GAME LOGIC
 score_count: .byte 0,0,0
@@ -29,18 +30,18 @@ lane_shape_x: .byte $00,$00
 
 // GAME TEXT
 .encoding "petscii_mixed"
-txt_titlename1: .text "  UCCCC B     UCCCI UCI B UCCCC UCCCC   "
-txt_titlename2: .text "  B     B     B   B B B B B     B       "
-txt_titlename3: .text "  BDD   B     BDDDB B B B BDD   JCCCI   "
-txt_titlename4: .text "  B     B     B   B B B B B         B   "
-txt_titlename5: .text "  B     JCCCC B   B B JCK JCCCC CCCCK   "
+txt_titlename1: .text           "  UCCCC B     UCCCI UCI B UCCCC UCCCC   "
+txt_titlename2: .text           "  B     B     B   B B B B B     B       "
+txt_titlename3: .text           "  BDD   B     BDDDB B B B BDD   JCCCI   "
+txt_titlename4: .text           "  B     B     B   B B B B B         B   "
+txt_titlename5: .text           "  B     JCCCC B   B B JCK JCCCC CCCCK   "
 
 .encoding "screencode_mixed"
-txt_titleinstruction: .text "         press 'space' to start         "
-txt_titlecredit: .text      "        by jonathan capps (2020)        "
-txt_gameover1: .text        "               game over!               "
-txt_gameover2: .text        "        press 'space' to restart        "
-txt_hud: .text         "lives : ?                 score : 000000"
+txt_titleinstruction: .text     "         press 'space' to start         "
+txt_titlecredit: .text          "        by jonathan capps (2020)        "
+txt_gameover1: .text            "               game over!               "
+txt_gameover2: .text            "        press 'space' to restart        "
+txt_hud: .text                  "lives : ?                 score : 000000"
 
 // COLORS
 lanecolors: .byte YELLOW, GREEN, CYAN, LIGHT_RED
@@ -56,15 +57,19 @@ MAIN: {
         jsr SCREEN.text_color.white
         jmp title
     }
-    
+
     gameover: {
         lda #$02
         sta game_state
         
-        jsr SCREEN.clear
         jsr SCREEN.gameover_text
         jsr SCREEN.text_color.white
         jsr SHAPES.clear
+
+        gameoverloop:
+            lda PORT_REG_B
+            cmp #$ef
+            bne gameoverloop
     }
     
     reset: {
@@ -114,7 +119,6 @@ MAIN: {
             
             jmp mainloop
     }
-
 }
 
 // gameplaye logic
@@ -137,21 +141,18 @@ GAMEPLAY: {
     }
 
     generate_rnd: {
-
-        !:
-            lda $D41B
-            lsr
-            lsr
-            lsr
-            lsr
-            lsr
-            lsr
-            clc
-            adc #1
-            cmp rnd_avoid
-            beq !-
-            rts
-
+        lda $D41B
+        lsr
+        lsr
+        lsr
+        lsr
+        lsr
+        lsr
+        clc
+        adc #1
+        cmp rnd_avoid
+        beq generate_rnd
+        rts
     }
 
     update_lives: {
@@ -214,7 +215,8 @@ GAMEPLAY: {
             cmp active_lane
             bne lose_life
             
-            jsr SCORE.increase
+            jsr SCORE.check
+            jsr SHAPES.reset_lane
             rts
         end_nopress:
             lda #$00
@@ -223,13 +225,15 @@ GAMEPLAY: {
             lda #$00
             sta selected_lane
             rts
-        lose_life:
-            lda lives_count
-            sec
-            sbc #1
-            sta lives_count
-            jsr update_lives
-            rts
+    }
+
+    lose_life: {
+        lda lives_count
+        sec
+        sbc #1
+        sta lives_count
+        jsr update_lives
+        rts
     }
 
 }
@@ -237,6 +241,37 @@ GAMEPLAY: {
 // SCORE
 SCORE: {
 
+    check: {
+
+        check_zero:
+            lda score_count
+            cmp #0
+            bne check_hit
+            lda score_count+1
+            cmp #0
+            bne check_hit
+            lda score_count+2
+            cmp #0
+            bne check_hit
+
+            lda $01;
+            sta zero_score
+
+        check_hit:
+            lda SPRITE_MSB_X
+            and 00000001
+            beq !+ 
+        !:
+            lda SPRITE_0_X
+            cmp #35
+            bcs !+
+            jmp decrease
+        !:
+            cmp #55
+            bcc increase
+            jmp decrease
+    }
+    
     increase: {
         sed
         clc
@@ -250,20 +285,48 @@ SCORE: {
         adc #0
         sta score_count+2
         cld
+
+        lda $00;
+        sta zero_score
+
+        jmp check_difficulty
     }
+    
+    decrease: {
+        clc
+        lda zero_score
+        cmp $01;
+        beq GAMEPLAY.lose_life
+
+        sed
+        sec
+        lda score_count
+        sbc #10
+        sta score_count
+        lda score_count+1
+        sbc #0
+        sta score_count+1
+        lda score_count+2
+        sbc #0
+        sta score_count+2
+        cld
+
+        jmp process
+    } 
 
     check_difficulty: {
         clc
         lda difficulty_increment
         adc #10
-        cmp #60
+        cmp #50
+        sta difficulty_increment
         bne process
         inc lane_shape_speed
         lda #0
+        sta difficulty_increment
     }
 
     process: {
-            sta difficulty_increment
             ldy #$27
             ldx #$00
         !:
@@ -335,7 +398,6 @@ SHAPES: {
         lda #%00000010
         sta SPRITE_MSB_X       
                
-
         lda #%00001111
         sta SPRITE_ENABLE
 
@@ -386,6 +448,16 @@ SHAPES: {
             sta lane_shape_x + 1
         move_end:
             rts
+    }
+
+    reset_lane: {
+        lda #$00
+        sta active_lane_movement
+        sta lane_shape_x
+        sta lane_shape_x + 1
+        lda SPRITE_MSB_X
+        and #%11111110
+        sta SPRITE_MSB_X
     }
 
     draw: {
@@ -457,7 +529,6 @@ SCREEN: {
     }
         
     text_color: {
-
         white:
             lda #WHITE
             jmp set_color
@@ -473,12 +544,10 @@ SCREEN: {
                 inx
                 cpx #250
                 bne !-
-                rts
-            
+                rts     
     }    
 
     title_text: {
-
         .label TITLE_START = SCREEN_RAM + 80
 
         title1_draw:
@@ -693,7 +762,7 @@ INTERRUPTS: {
 
         lane3:
             lda selected_lane
-            cmp #$02
+            cmp #$03
             bne !+
             ldx #WHITE
             jmp lane3_draw
@@ -729,7 +798,7 @@ INTERRUPTS: {
 
         lane4:
             lda selected_lane
-            cmp #$02
+            cmp #$04
             bne !+
             ldx #WHITE
             jmp lane4_draw
