@@ -86,6 +86,8 @@ MAIN: {
         sta lane_shape_x + 1
         lda #$04
         sta lives_count
+        lda #2
+        sta lane_shape_speed
     }
 
     title: {
