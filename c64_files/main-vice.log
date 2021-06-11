@@ -53,7 +53,7 @@ Error - CRT header invalid.
 CART: 'main.prg' is not a valid CRT file.
 AUTOSTART: Loading PRG file `main.prg' with autostart disk image.
 AUTOSTART: Resetting the machine to autostart 'MAIN'
-VIC-II: VSP Bug: safe channels are: 367. Emulation of memory corruption is disabled.
+VIC-II: VSP Bug: safe channels are: 012456. Emulation of memory corruption is disabled.
 AUTOSTART: Turning Warp mode on
 AUTOSTART: `main.prg' recognized as program/p00 file.
 Main CPU: starting at ($FFFC).
@@ -65,7 +65,7 @@ reSID: MOS8580, filter on, sampling rate 44100Hz - resampling, pass to 19845Hz
 Unit 8: RESET.
 AUTOSTART: Loading program 'MAIN'
 AUTOSTART: Searching for ... missed, got LOADING
-AUTOSTART: Entered ROM at $ed71
+AUTOSTART: Entered ROM at $ed8e
 AUTOSTART: Ready
 AUTOSTART: Turning Warp mode off
 AUTOSTART: Starting program.
@@ -79,5 +79,5 @@ Joined render thread 0.
 VICE thread initiating shutdown
 VICE thread is exiting
 VICE thread has been joined.
-VIC-II: VSP Bug: safe channels are: 023456. Emulation of memory corruption is disabled.
+VIC-II: VSP Bug: safe channels are: 0237. Emulation of memory corruption is disabled.
 Sound: Closing device `dx'

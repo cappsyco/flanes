@@ -20,6 +20,7 @@ zero_score: .byte $01
 // GAME LOGIC
 score_count: .byte 0,0,0
 lives_count: .byte 4
+level_count: .byte 1
 difficulty_increment: .byte 0
 selected_lane: .byte 0
 active_lane: .byte 0
@@ -38,10 +39,10 @@ txt_titlename5: .text           "  B     JCCCC B   B B JCK JCCCC CCCCK   "
 
 .encoding "screencode_mixed"
 txt_titleinstruction: .text     "         press 'space' to start         "
-txt_titlecredit: .text          "        by jonathan capps (2020)        "
+txt_titlecredit: .text          "        by jonathan capps (2021)        "
 txt_gameover1: .text            "               game over!               "
 txt_gameover2: .text            "        press 'space' to restart        "
-txt_hud: .text                  "lives : ?                 score : 000000"
+txt_hud: .text                  "lives : ?    level : 1    score : 000000"
 
 // COLORS
 lanecolors: .byte YELLOW, GREEN, CYAN, LIGHT_RED
@@ -84,6 +85,8 @@ MAIN: {
         sta active_lane_movement
         sta lane_shape_x
         sta lane_shape_x + 1
+        lda #1
+        sta level_count
         lda #$04
         sta lives_count
         lda #2
@@ -324,13 +327,26 @@ SCORE: {
         sta difficulty_increment
         bne process
         inc lane_shape_speed
+        inc level_count
         lda #0
         sta difficulty_increment
     }
 
+    level_process: {
+
+        lda level_count
+    }
+
     process: {
-            ldy #$27
-            ldx #$00
+        
+        lda level_count
+        clc
+        adc #48
+        sta SCREEN_RAM + 21
+        
+        ldy #$27
+        ldx #$00
+        
         !:
             lda score_count,x
             pha
