@@ -31,18 +31,19 @@ lane_shape_x: .byte $00,$00
 
 // GAME TEXT
 .encoding "petscii_mixed"
-txt_titlename1: .text           "  UCCCC B     UCCCI UCI B UCCCC UCCCC   "
-txt_titlename2: .text           "  B     B     B   B B B B B     B       "
-txt_titlename3: .text           "  BDD   B     BDDDB B B B BDD   JCCCI   "
-txt_titlename4: .text           "  B     B     B   B B B B B         B   "
-txt_titlename5: .text           "  B     JCCCC B   B B JCK JCCCC CCCCK   "
+txt_titlename1: .text            "  UCCCC B     UCCCI UCI B UCCCC UCCCC   "
+txt_titlename2: .text            "  B     B     B   B B B B B     B       "
+txt_titlename3: .text            "  BDD   B     BDDDB B B B BDD   JCCCI   "
+txt_titlename4: .text            "  B     B     B   B B B B B         B   "
+txt_titlename5: .text            "  B     JCCCC B   B B JCK JCCCC CCCCK   "
 
 .encoding "screencode_mixed"
-txt_titleinstruction: .text     "         press 'space' to start         "
-txt_titlecredit: .text          "        by jonathan capps (2021)        "
-txt_gameover1: .text            "               game over!               "
-txt_gameover2: .text            "        press 'space' to restart        "
-txt_hud: .text                  "lives : ?    level : 1    score : 000000"
+txt_titleinstruction1: .text     "   press an f key at the right time!    "
+txt_titleinstruction2: .text     "         press 'space' to start         "
+txt_titlecredit: .text           "        by jonathan capps (2021)        "
+txt_gameover1: .text             "               game over!               "
+txt_gameover2: .text             "        press 'space' to restart        "
+txt_hud: .text                   "lives : ?    level : 1    score : 000000"
 
 // COLORS
 lanecolors: .byte YELLOW, GREEN, CYAN, LIGHT_RED
@@ -54,8 +55,8 @@ MAIN: {
     setup: {
         jsr INTERRUPTS.init
         jsr SCREEN.clear
-        jsr SCREEN.title_text
         jsr SCREEN.text_color.white
+        jsr SCREEN.title_text
         jmp title
     }
 
@@ -567,10 +568,14 @@ SCREEN: {
 
     title_text: {
         .label TITLE_START = SCREEN_RAM + 80
+        .label TITLE_COLOR_START = COLOR_RAM + 80;
 
         title1_draw:
                 ldx #$27
             !:
+                lda #YELLOW
+                sta TITLE_COLOR_START,x
+
                 lda txt_titlename1,x
                 sta TITLE_START,x
                 dex
@@ -578,6 +583,9 @@ SCREEN: {
         title2_draw:
                 ldx #$27
             !:
+                lda #GREEN
+                sta TITLE_COLOR_START + 40,x
+                
                 lda txt_titlename2,x
                 sta TITLE_START + 40,x
                 dex
@@ -585,6 +593,9 @@ SCREEN: {
         title3_draw:
                 ldx #$27
             !:
+                lda #CYAN
+                sta TITLE_COLOR_START + 80,x
+                
                 lda txt_titlename3,x
                 sta TITLE_START + 80,x
                 dex
@@ -592,6 +603,9 @@ SCREEN: {
         title4_draw:
                 ldx #$27
             !:
+                lda #LIGHT_RED
+                sta TITLE_COLOR_START + 120,x
+                
                 lda txt_titlename4,x
                 sta TITLE_START + 120,x
                 dex
@@ -599,6 +613,9 @@ SCREEN: {
         title5_draw:
                 ldx #$27
             !:
+                lda #LIGHT_BLUE
+                sta TITLE_COLOR_START + 160,x
+                
                 lda txt_titlename5,x
                 sta TITLE_START + 160,x
                 dex
@@ -607,16 +624,26 @@ SCREEN: {
         instruction_draw:
                 ldx #$27
             !:
-                lda txt_titleinstruction,x
-                sta $0680,x
+                lda txt_titleinstruction1,x
+                sta TITLE_START + 360,x
                 dex
-                bpl !-    
+                bpl !-  
+
+                ldx #$27
+            !:
+                lda txt_titleinstruction2,x
+                sta TITLE_START + 440,x
+                dex
+                bpl !-   
 
         credit_draw:
                 ldx #$27
             !:
+                lda #LIGHT_GREY
+                sta TITLE_COLOR_START + 880,x
+                
                 lda txt_titlecredit,x
-                sta $798,x
+                sta TITLE_START + 880,x
                 dex
                 bpl !-   
         rts
